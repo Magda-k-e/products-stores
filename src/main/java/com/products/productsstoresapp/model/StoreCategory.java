@@ -20,7 +20,7 @@ public class StoreCategory implements Serializable {
 
     private Long id;
     private String description;
-    private String fame;
+
     @OneToMany(mappedBy = "storeCategory")
     @JsonIgnore
     private List<Store> stores;
