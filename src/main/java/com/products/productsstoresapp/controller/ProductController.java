@@ -34,6 +34,18 @@ public class ProductController {
     }
 
 
+    //post product with product category and store
+    //create?storeId=1&categoryId=1
+    @PostMapping("/create")
+    public ResponseEntity<Product> createProductWithStoreAndCategory(@RequestBody Product product,
+                                                                     @RequestParam Long storeId,
+                                                                     @RequestParam Long categoryId) {
+        Product createdProductWithStoreAndCategory = productService.createProductWithStoreAndCategory(product, storeId, categoryId);
+        return new ResponseEntity<>(createdProductWithStoreAndCategory, HttpStatus.CREATED);
+    }
+
+
+
     //get all products
     @GetMapping("products")
     public ResponseEntity<List<ProductResource>> getAllProducts() {

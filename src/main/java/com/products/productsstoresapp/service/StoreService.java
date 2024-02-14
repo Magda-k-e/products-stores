@@ -21,6 +21,8 @@ public class StoreService {
         this.storeCategoryRepository = storeCategoryRepository;
     }
 
+
+
     public Store createStoreWithCategory(Store store, Long categoryId) {
         Optional<StoreCategory> categoryOptional = storeCategoryRepository.findById(categoryId);
         // if the category exists
