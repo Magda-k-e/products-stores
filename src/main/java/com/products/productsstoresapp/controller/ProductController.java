@@ -69,9 +69,21 @@ public class ProductController {
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id){
         Optional<Product> product = productService.getProduct(id);
         if (product.isPresent()) {
-            ProductResource productResource = ProductMapper.INSTANCE.toResource(product.get());
             productService.deleteProduct(id);
             return new ResponseEntity<>( HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //search product by name using Resource
+    ///searchproducts?name=frappe
+    @GetMapping("/searchproducts")
+    public ResponseEntity<ProductResource> findProductByName(@RequestParam String name){
+        Optional<Product> product = productService.findProductByName(name);
+        if (product.isPresent()){
+            ProductResource productResource = ProductMapper.INSTANCE.toResource(product.get());
+            return new ResponseEntity<>(productResource,HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }
