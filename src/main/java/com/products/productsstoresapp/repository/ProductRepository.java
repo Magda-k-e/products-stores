@@ -2,6 +2,7 @@ package com.products.productsstoresapp.repository;
 
 import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.model.ProductCategory;
+import com.products.productsstoresapp.model.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +13,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByProductCategory(ProductCategory productCategory);
 
     List<Product> findByProductCategoryDescription(String description);
+
+    public List<Product> findByStore(Store store);
 
 }

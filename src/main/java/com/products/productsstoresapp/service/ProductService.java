@@ -90,4 +90,9 @@ public class ProductService {
         return productRepository.findByProductCategoryDescription(description);
     }
 
+    // get product by store
+    public List<Product> getProductsByStore(Store store) {
+        return productRepository.findByStore(store);
+    }
+
 }

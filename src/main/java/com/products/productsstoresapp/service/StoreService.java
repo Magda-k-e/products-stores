@@ -1,5 +1,6 @@
 package com.products.productsstoresapp.service;
 
+import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.model.Store;
 import com.products.productsstoresapp.model.StoreCategory;
 import com.products.productsstoresapp.repository.StoreCategoryRepository;
@@ -53,6 +54,10 @@ public class StoreService {
 
     public List<Store> getStoresByCategory(StoreCategory storeCategory) {
         return storeRepository.findByStoreCategory(storeCategory);
+    }
+
+    public Optional<Store> getStore(Long id){
+        return storeRepository.findById(id);
     }
 
 }

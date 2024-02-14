@@ -1,10 +1,12 @@
 package com.products.productsstoresapp.controller;
 
 import com.products.productsstoresapp.mapper.StoreMapper;
+import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.model.Store;
 import com.products.productsstoresapp.model.StoreCategory;
 import com.products.productsstoresapp.service.StoreCategoryService;
 import com.products.productsstoresapp.service.StoreService;
+import com.products.productsstoresapp.transfer.resource.ProductResource;
 import com.products.productsstoresapp.transfer.resource.StoreResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +22,14 @@ public class StoreController {
     private final StoreService storeService;
     private final StoreCategoryService storeCategoryService;
 
+
+
     public StoreController(StoreService storeService, StoreCategoryService storeCategoryService) {
         this.storeService = storeService;
         this.storeCategoryService = storeCategoryService;
     }
+
+
 
     //add store with category
 
@@ -78,5 +84,9 @@ public class StoreController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+
+
 
 }
