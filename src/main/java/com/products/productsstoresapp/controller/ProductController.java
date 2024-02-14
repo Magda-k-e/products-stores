@@ -106,7 +106,7 @@ public class ProductController {
     }
 
     //    //  search for products by product category
-    ///products/productsbycategory/coffee
+    //  /productsbycategory/coffee
     @GetMapping("/productsbycategorydescription/{description}")
     public ResponseEntity<List<ProductResource>> getProductsByCategoryName(@PathVariable String description) {
         List<Product> productCategories = productService.findProductsByCategoryName(description);
