@@ -24,7 +24,7 @@ public class StoreCategoryController {
     public ResponseEntity<Void> addStoreCategory(@RequestBody StoreCategoryResource storeCategoryResource){
         StoreCategory storeCategory = StoreCategoryMapper.INSTANCE.toDomain(storeCategoryResource);
         storeCategoryService.addStoreCategory(storeCategory);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //get all store categories

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StoreCategoryService {
@@ -25,5 +26,10 @@ public class StoreCategoryService {
         storeCategoryRepository.findAll()
                 .forEach(storeCategories::add);
         return storeCategories;
+    }
+
+    //get store category by id
+    public Optional<StoreCategory> getStoreCategoryById(Long id) {
+        return storeCategoryRepository.findById(id);
     }
 }

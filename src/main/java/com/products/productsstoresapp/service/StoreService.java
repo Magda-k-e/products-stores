@@ -40,4 +40,17 @@ public class StoreService {
                 .forEach(stores::add);
         return stores;
     }
+
+    //search store by name
+
+    public Optional<Store> findStoreByName(String name) {
+        return storeRepository.findByName(name);
+    }
+
+    // get stores by store category
+
+    public List<Store> getStoresByCategory(StoreCategory storeCategory) {
+        return storeRepository.findByStoreCategory(storeCategory);
+    }
+
 }
