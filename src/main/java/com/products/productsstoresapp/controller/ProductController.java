@@ -2,6 +2,7 @@ package com.products.productsstoresapp.controller;
 
 import com.products.productsstoresapp.mapper.ProductMapper;
 import com.products.productsstoresapp.model.Product;
+import com.products.productsstoresapp.model.ProductCategory;
 import com.products.productsstoresapp.service.ProductCategoryService;
 import com.products.productsstoresapp.service.ProductService;
 import com.products.productsstoresapp.transfer.resource.ProductResource;
@@ -87,7 +88,36 @@ public class ProductController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    //search for products by product category
+    @GetMapping("/productsbycategory/{categoryId}")
+    public ResponseEntity<List<ProductResource>> getProductsByCategory(@PathVariable Long categoryId){
+        Optional<ProductCategory> productCategory = productCategoryService.getProductCategoryById(categoryId);
+        if (productCategory.isPresent()){
+            List<Product> products = productService.getProductsByCategory(productCategory.get());
+            List<ProductResource> productResources = products.stream()
+                    .map(ProductMapper.INSTANCE::toResource)
+                    .toList();
+            return new ResponseEntity<>(productResources, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //    //  search for products by product category
+    ///products/productsbycategory/coffee
+    @GetMapping("/productsbycategorydescription/{description}")
+    public ResponseEntity<List<ProductResource>> getProductsByCategoryName(@PathVariable String description) {
+        List<Product> productCategories = productService.findProductsByCategoryName(description);
+        if (!productCategories.isEmpty()) {
+            List<ProductResource> productResources = productCategories.stream()
+                    .map(ProductMapper.INSTANCE::toResource)
+                    .toList();
+            return new ResponseEntity<>(productResources, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
 

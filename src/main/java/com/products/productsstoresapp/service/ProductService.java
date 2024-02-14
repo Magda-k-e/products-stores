@@ -53,4 +53,14 @@ public class ProductService {
         return productRepository.findByName(name);
     }
 
+    //get a product by product category id
+    public List<Product> getProductsByCategory(ProductCategory productCategory) {
+        return productRepository.findByProductCategory(productCategory);
+    }
+
+    //get a product by product category name
+    public List<Product> findProductsByCategoryName(String description){
+        return productRepository.findByProductCategoryDescription(description);
+    }
+
 }
