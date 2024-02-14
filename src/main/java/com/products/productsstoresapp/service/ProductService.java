@@ -2,8 +2,10 @@ package com.products.productsstoresapp.service;
 
 import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.model.ProductCategory;
+import com.products.productsstoresapp.model.Store;
 import com.products.productsstoresapp.repository.ProductCategoryRepository;
 import com.products.productsstoresapp.repository.ProductRepository;
+import com.products.productsstoresapp.repository.StoreRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,10 +16,18 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
+    private final StoreRepository storeRepository;
 
-    public ProductService(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository) {
+//    public ProductService(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository) {
+//        this.productRepository = productRepository;
+//        this.productCategoryRepository = productCategoryRepository;
+//    }
+
+
+    public ProductService(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository, StoreRepository storeRepository) {
         this.productRepository = productRepository;
         this.productCategoryRepository = productCategoryRepository;
+        this.storeRepository = storeRepository;
     }
 
     public Product createProductWithCategory(Product product, Long categoryId) {
@@ -30,6 +40,23 @@ public class ProductService {
         } else {
             // if the category does not exist
             throw new IllegalArgumentException("Category with ID " + categoryId + " not found.");
+        }
+    }
+
+    //create product for a store with category
+    public Product createProductWithStoreAndCategory(Product product, Long storeId, Long categoryId) {
+        Optional<Store> optionalStore = storeRepository.findById(storeId);
+        Optional<ProductCategory> optionalProductCategory = productCategoryRepository.findById(categoryId);
+
+        if (optionalStore.isPresent() && optionalProductCategory.isPresent()) {
+            Store store = optionalStore.get();
+            ProductCategory productCategory = optionalProductCategory.get();
+            product.setStore(store);
+            product.setProductCategory(productCategory);
+            return productRepository.save(product);
+        } else {
+
+            throw new IllegalArgumentException("Store with ID " + storeId + " or Product category with id "+ categoryId + " not found.");
         }
     }
 
@@ -61,6 +88,11 @@ public class ProductService {
     //get a product by product category name
     public List<Product> findProductsByCategoryName(String description){
         return productRepository.findByProductCategoryDescription(description);
+    }
+
+    // get product by store
+    public List<Product> getProductsByStore(Store store) {
+        return productRepository.findByStore(store);
     }
 
 }

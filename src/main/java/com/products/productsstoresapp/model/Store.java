@@ -1,10 +1,11 @@
 package com.products.productsstoresapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,20 +14,18 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Product implements Serializable {
+public class Store implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String serial;
+    private String address;
 
-    private BigDecimal price;
+    //@ManyToMany
+    @OneToMany(mappedBy = "store")
+    @JsonIgnore
+    private List<Product> products;
 
     @ManyToOne
-    //@JoinColumn(name = "PRODUCT_CATEGORY_ID")
-    private ProductCategory productCategory;
-
-    @ManyToOne
-    private Store store;
-
+    private StoreCategory storeCategory;
 }

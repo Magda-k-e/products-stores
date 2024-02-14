@@ -3,8 +3,10 @@ package com.products.productsstoresapp.controller;
 import com.products.productsstoresapp.mapper.ProductMapper;
 import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.model.ProductCategory;
+import com.products.productsstoresapp.model.Store;
 import com.products.productsstoresapp.service.ProductCategoryService;
 import com.products.productsstoresapp.service.ProductService;
+import com.products.productsstoresapp.service.StoreService;
 import com.products.productsstoresapp.transfer.resource.ProductResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,18 @@ public class ProductController {
 
     private final ProductCategoryService productCategoryService;
 
-    public ProductController(ProductService productService, ProductCategoryService productCategoryService) {
+    private final StoreService storeService;
+
+//    public ProductController(ProductService productService, ProductCategoryService productCategoryService) {
+//        this.productService = productService;
+//        this.productCategoryService = productCategoryService;
+//    }
+
+
+    public ProductController(ProductService productService, ProductCategoryService productCategoryService, StoreService storeService) {
         this.productService = productService;
         this.productCategoryService = productCategoryService;
+        this.storeService = storeService;
     }
 
     // add product with category
@@ -32,6 +43,18 @@ public class ProductController {
         Product createdProductWithCategory = productService.createProductWithCategory(createdProduct, categoryId);
         return new ResponseEntity<>(createdProductWithCategory, HttpStatus.CREATED);
     }
+
+
+    //post product with product category and store
+    //create?storeId=1&categoryId=1
+    @PostMapping("/create")
+    public ResponseEntity<Product> createProductWithStoreAndCategory(@RequestBody Product product,
+                                                                     @RequestParam Long storeId,
+                                                                     @RequestParam Long categoryId) {
+        Product createdProductWithStoreAndCategory = productService.createProductWithStoreAndCategory(product, storeId, categoryId);
+        return new ResponseEntity<>(createdProductWithStoreAndCategory, HttpStatus.CREATED);
+    }
+
 
 
     //get all products
@@ -77,6 +100,8 @@ public class ProductController {
         }
     }
 
+
+    // possibly must rewrite with products list, in case product names are not unique
     //search product by name using Resource
     ///searchproducts?name=frappe
     @GetMapping("/searchproducts")
@@ -116,6 +141,25 @@ public class ProductController {
                     .toList();
             return new ResponseEntity<>(productResources, HttpStatus.OK);
         } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    //get products by store
+    ///products/productsbystore/2
+
+    @GetMapping("/productsbystore/{storeId}")
+    public ResponseEntity<List<ProductResource>> getProductsByStore(@PathVariable Long storeId){
+        //Optional<Store> store = Optional.ofNullable(storeService.get(storeId));
+        Optional<Store> store = storeService.getStore(storeId);
+        if (store.isPresent()){
+            List<Product> products =productService.getProductsByStore(store.get());
+            List<ProductResource> productResources = products.stream()
+                    .map(ProductMapper.INSTANCE::toResource)
+                    .toList();
+            return new ResponseEntity<>(productResources, HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
