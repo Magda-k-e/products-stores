@@ -1,6 +1,7 @@
 package com.products.productsstoresapp.transfer.resource;
 
 import com.products.productsstoresapp.model.ProductCategory;
+import com.products.productsstoresapp.model.Store;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +20,5 @@ public class ProductResource implements Serializable {
 
     private ProductCategory productCategory;
 
-    //private Store store;
+    private Store store;
 }
