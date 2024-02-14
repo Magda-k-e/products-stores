@@ -39,4 +39,15 @@ public class ProductService {
                 .forEach(products::add);
         return products;
     }
+
+    public Optional<Product> getProduct(Long id){
+        return productRepository.findById(id);
+    }
+
+    public void deleteProduct(Long id){
+        productRepository.deleteById(id);
+    }
+
+
+
 }

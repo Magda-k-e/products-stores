@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,7 +24,7 @@ public class ProductController {
         this.productCategoryService = productCategoryService;
     }
 
-    // add product with category using Resource
+    // add product with category
     @PostMapping("/products/{categoryId}/productswithcategory")
     public ResponseEntity<Product> createProductWithCategory(@RequestBody ProductResource productResource, @PathVariable Long categoryId){
         Product createdProduct = ProductMapper.INSTANCE.toDomain(productResource);
@@ -32,7 +33,7 @@ public class ProductController {
     }
 
 
-    //get all products using resource
+    //get all products
     @GetMapping("products")
     public ResponseEntity<List<ProductResource>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
@@ -44,6 +45,37 @@ public class ProductController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // get product by id
+    @GetMapping("products/{id}")
+    public ResponseEntity<ProductResource> getProduct(@PathVariable Long id) {
+        Optional<Product> product = productService.getProduct(id);
+        if (product.isPresent()) {
+            ProductResource productResource = ProductMapper.INSTANCE.toResource(product.get());
+            return new ResponseEntity<>(productResource, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+
+        }
+    }
+
+//    @RequestMapping(method = RequestMethod.DELETE, value = "/products/{id}")
+//    public void deleteProduct(@PathVariable Long id){
+//        productService.deleteProduct(id);
+//    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/products/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable Long id){
+        Optional<Product> product = productService.getProduct(id);
+        if (product.isPresent()) {
+            ProductResource productResource = ProductMapper.INSTANCE.toResource(product.get());
+            productService.deleteProduct(id);
+            return new ResponseEntity<>( HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }
 
