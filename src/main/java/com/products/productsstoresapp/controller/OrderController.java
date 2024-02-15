@@ -62,6 +62,18 @@ public class OrderController {
         return new ResponseEntity<>(createdOrderItem,HttpStatus.CREATED);
     }
 
+    // update
+
+    @PutMapping("/orders/{orderId}/updatedorder")
+    public ResponseEntity<Order> updateOrderTotalPrice(@PathVariable Long orderId) {
+        try {
+            Order updatedOrder = orderService.updateOrder(orderId);
+            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     //get all products
     @GetMapping("orders")
