@@ -35,5 +35,10 @@ public class AccountService {
     //delete account
     public void deleteAccount(Long id){accountRepository.deleteById(id);}
 
+    //find by email
+    public Optional<Account> getAccountByEmail(String email){
+        return accountRepository.findByEmail(email);
+    }
+
 
 }

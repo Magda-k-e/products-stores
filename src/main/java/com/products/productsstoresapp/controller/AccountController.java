@@ -1,9 +1,12 @@
 package com.products.productsstoresapp.controller;
 
 import com.products.productsstoresapp.mapper.AccountMapper;
+import com.products.productsstoresapp.mapper.ProductMapper;
 import com.products.productsstoresapp.model.Account;
+import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.service.AccountService;
 import com.products.productsstoresapp.transfer.resource.AccountResource;
+import com.products.productsstoresapp.transfer.resource.ProductResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,5 +61,18 @@ public class AccountController {
     //delete account
     @RequestMapping(method = RequestMethod.DELETE, value = "/accounts/{id}")
     public void deleteAccount(@PathVariable Long id){accountService.deleteAccount(id);}
+
+    //search account by email
+    ///searchaccounts?email=elpap@mail.com
+    @GetMapping("/searchaccounts")
+    public ResponseEntity<AccountResource> findAccountByEmail (@RequestParam String email){
+        Optional<Account> account = accountService.getAccountByEmail(email);
+        if (account.isPresent()){
+            AccountResource accountResource = AccountMapper.INSTANCE.toResource(account.get());
+            return new ResponseEntity<>(accountResource,HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
