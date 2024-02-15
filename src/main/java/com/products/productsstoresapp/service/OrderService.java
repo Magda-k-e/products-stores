@@ -123,6 +123,11 @@ public class OrderService {
     }
 
 
+    // get orders by account
+
+    public List<Order> getOrdersByAccount(Account account) {
+        return orderRepository.findByAccount(account);
+    }
 
 
 

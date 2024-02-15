@@ -3,9 +3,7 @@ package com.products.productsstoresapp.controller;
 import com.products.productsstoresapp.mapper.OrderItemMapper;
 import com.products.productsstoresapp.mapper.OrderMapper;
 import com.products.productsstoresapp.mapper.ProductMapper;
-import com.products.productsstoresapp.model.Order;
-import com.products.productsstoresapp.model.OrderItem;
-import com.products.productsstoresapp.model.Product;
+import com.products.productsstoresapp.model.*;
 import com.products.productsstoresapp.service.AccountService;
 import com.products.productsstoresapp.service.OrderService;
 import com.products.productsstoresapp.service.ProductService;
@@ -16,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -89,4 +88,23 @@ public class OrderController {
         }
     }
 
+
+    //get orders by account
+    //get products by store
+    ////ordersbyaccount/2
+
+    @GetMapping("/ordersbyaccount/{accountId}")
+    public ResponseEntity<List<OrderResource>> getOrdersByStore(@PathVariable Long accountId){
+        //Optional<Store> store = Optional.ofNullable(storeService.get(storeId));
+        Optional<Account> account = accountService.getAccount(accountId);
+        if (account.isPresent()){
+            List<Order> orders =orderService.getOrdersByAccount(account.get());
+            List<OrderResource> orderResources = orders.stream()
+                    .map(OrderMapper.INSTANCE::toResource)
+                    .toList();
+            return new ResponseEntity<>(orderResources, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
