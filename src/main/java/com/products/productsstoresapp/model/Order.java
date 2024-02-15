@@ -20,6 +20,9 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private Account account;
+
     @OneToMany(mappedBy = "order")
     @JsonIgnore
     private List<OrderItem> orderItems;
