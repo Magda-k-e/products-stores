@@ -122,4 +122,16 @@ public class OrderController {
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    //view number of orders for each store
+    @GetMapping("/viewnumberoforders/{storeId}")
+    public ResponseEntity<Long> viewNumberOrders(@PathVariable Long storeId){
+        Optional<Store> store = storeService.getStore(storeId);
+        if (store.isPresent()){
+            Long orderLong = orderService.countOrdersByStore(store.get());
+            return new ResponseEntity<>(orderLong,HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

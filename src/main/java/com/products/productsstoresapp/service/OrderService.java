@@ -119,11 +119,21 @@ public class OrderService {
     }
 
 
-    //count orders for each store
+    //get orders for each store
 
     public List<Order> getOrdersByStore(Store store){return orderRepository.findByStore(store);}
 
 
+    // count orders for each store and pick maximum
+    public long countOrdersByStore(Store store){
+        //Optional<Order> orderOptional = orderRepository.findById(orderId);
+        //Optional<Order> orderOptional = orderRepository.findById(order.getId());
+        //BigDecimal total = order.getOrderItems().stream()
+        List<Order> ordersByStore = orderRepository.findByStore(store);
+        long totalOrders = ordersByStore.stream().count();
+        return totalOrders;
+
+    }
 
 
 
