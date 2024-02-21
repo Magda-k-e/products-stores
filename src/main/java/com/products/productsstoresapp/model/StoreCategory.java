@@ -21,6 +21,7 @@ public class StoreCategory implements Serializable {
     private Long id;
     private String description;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "storeCategory")
     @JsonIgnore
     private List<Store> stores;

@@ -10,9 +10,8 @@ import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -124,14 +123,24 @@ public class OrderService {
     public List<Order> getOrdersByStore(Store store){return orderRepository.findByStore(store);}
 
 
-    // count orders for each store and pick maximum
+    // count orders for each store
     public long countOrdersByStore(Store store){
-        //Optional<Order> orderOptional = orderRepository.findById(orderId);
-        //Optional<Order> orderOptional = orderRepository.findById(order.getId());
-        //BigDecimal total = order.getOrderItems().stream()
+
         List<Order> ordersByStore = orderRepository.findByStore(store);
         long totalOrders = ordersByStore.stream().count();
         return totalOrders;
+
+    }
+
+    //sort number of orders by store
+    public Map<Store, Long> getStoresSorted(List<Store> stores){
+        Map<Store,Long> ordersCountByStore = stores.stream()
+                .collect(Collectors.toMap(store -> store, store -> orderRepository.findByStore(store).stream().count()));
+        Map<Store, Long> sortedStores = ordersCountByStore.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(e1, e2)-> e2, LinkedHashMap::new));
+
+        return sortedStores;
 
     }
 

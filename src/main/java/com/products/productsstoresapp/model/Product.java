@@ -22,6 +22,7 @@ public class Product implements Serializable {
 
     private BigDecimal price;
 
+    @ToString.Exclude
     @ManyToOne
     //@JoinColumn(name = "PRODUCT_CATEGORY_ID")
     private ProductCategory productCategory;

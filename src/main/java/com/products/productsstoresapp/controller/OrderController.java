@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -134,4 +135,14 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    //get a List of the most famous stores (according to number of orders)
+    @GetMapping("/viewfamousstores")
+    public ResponseEntity<Map<Store,Long>> viewFamousStores(){
+        List<Store> allStores =storeService.getAllStores();
+        Map<Store,Long> storesSorted = orderService.getStoresSorted(allStores);
+        return new ResponseEntity<>(storesSorted,HttpStatus.OK);
+
+    }
+
 }

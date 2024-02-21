@@ -23,6 +23,7 @@ public class OrderItem implements Serializable {
     private Product product;
     // many OrderItem instances can be associated with a single Product.vmultiple order items can refer to the same product.
 
+    //@ToString.Exclude
     @ManyToOne
     private Order order;
 

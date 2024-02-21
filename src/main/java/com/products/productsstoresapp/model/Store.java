@@ -22,7 +22,8 @@ public class Store implements Serializable {
     private String name;
     private String address;
 
-    //@ManyToMany
+
+    @ToString.Exclude
     @OneToMany(mappedBy = "store")
     @JsonIgnore
     private List<Product> products;
@@ -30,6 +31,8 @@ public class Store implements Serializable {
     @ManyToOne
     private StoreCategory storeCategory;
 
+
+    @ToString.Exclude
     @OneToMany
     @JsonIgnore
     private List<Order> orders;
