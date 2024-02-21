@@ -3,6 +3,7 @@ package com.products.productsstoresapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.aspectj.weaver.ast.Or;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,4 +29,10 @@ public class Store implements Serializable {
 
     @ManyToOne
     private StoreCategory storeCategory;
+
+    @OneToMany
+    @JsonIgnore
+    private List<Order> orders;
+
+
 }

@@ -29,4 +29,8 @@ public class Order implements Serializable {
 
     private BigDecimal cost;
 
+    @ManyToOne
+    private Store store;
+    //many orders for each store
+
 }

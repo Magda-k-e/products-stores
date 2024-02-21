@@ -40,16 +40,7 @@ public class OrderController {
         return new ResponseEntity<>(createdOrderWithAccount, HttpStatus.CREATED);
     }
 
-//    //post product with product category and store
-//    //create?storeId=1&categoryId=1
-//    @PostMapping("/products/create")
-//    public ResponseEntity<Product> createProductWithStoreAndCategory(@RequestBody ProductResource productResource,
-//                                                                     @RequestParam Long storeId,
-//                                                                     @RequestParam Long categoryId) {
-//        Product createdProduct = ProductMapper.INSTANCE.toDomain(productResource);
-//        Product createdProductWithStoreAndCategory = productService.createProductWithStoreAndCategory(createdProduct, storeId, categoryId);
-//        return new ResponseEntity<>(createdProductWithStoreAndCategory, HttpStatus.CREATED);
-//    }
+
 
     //create order item for an order with a product
     //createorderitem?orderId=1&productId=1
@@ -61,9 +52,11 @@ public class OrderController {
         return new ResponseEntity<>(createdOrderItem,HttpStatus.CREATED);
     }
 
-    // update
 
-    @PutMapping("/orders/{orderId}/updatedorder")
+
+    // view updated order, total cost is shown here
+
+    @PutMapping("/orders/{orderId}/vieworder")
     public ResponseEntity<Order> updateOrderTotalPrice(@PathVariable Long orderId) {
         try {
             Order updatedOrder = orderService.updateOrder(orderId);

@@ -104,7 +104,10 @@ public class OrderService {
             Product product = optionalProduct.get();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
-            orderItem.setPrice(product.getPrice());
+            //transfer store value
+            order.setStore(product.getStore());
+            BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+            orderItem.setPrice(totalPrice);
             return orderItemRepository.save(orderItem);
         } else {
             throw  new IllegalArgumentException("order with id " + orderId + " or Product with id " + productId+ " not found");
@@ -113,6 +116,35 @@ public class OrderService {
     }
 
 
+
+//    BigDecimal total = order.getOrderItems().stream()
+//            .map(OrderItem::getPrice)
+//            .reduce(BigDecimal.ZERO, BigDecimal::add);
+//            order.setCost(total);
+//    Order updatedOrder = orderRepository.save(order);
+
+//    public Order createItemForOrder( OrderItem orderItem, Long orderId, Long productId){
+//        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+//        Optional<Product> optionalProduct = productRepository.findById(productId);
+//        if (optionalProduct.isPresent() && optionalOrder.isPresent()){
+//            Order order = optionalOrder.get();
+//            Product product = optionalProduct.get();
+//            orderItem.setOrder(order);
+//            orderItem.setProduct(product);
+//            BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+//            orderItem.setPrice(totalPrice);
+//            BigDecimal total = order.getOrderItems().stream()
+//            .map(OrderItem::getPrice)
+//            .reduce(BigDecimal.ZERO, BigDecimal::add);
+//            order.setCost(total);
+//             orderItemRepository.save(orderItem);
+//            Order updatedOrder = orderRepository.save(order);
+//            return updatedOrder;
+//        } else {
+//            throw  new IllegalArgumentException("order with id " + orderId + " or Product with id " + productId+ " not found");
+//        }
+//
+//    }
 
 
     public List<Order> getAllOrders(){
@@ -130,6 +162,7 @@ public class OrderService {
     }
 
 
+    //count orders
 
 
 
