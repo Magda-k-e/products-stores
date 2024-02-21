@@ -7,6 +7,7 @@ import com.products.productsstoresapp.model.*;
 import com.products.productsstoresapp.service.AccountService;
 import com.products.productsstoresapp.service.OrderService;
 import com.products.productsstoresapp.service.ProductService;
+import com.products.productsstoresapp.service.StoreService;
 import com.products.productsstoresapp.transfer.resource.OrderResource;
 import com.products.productsstoresapp.transfer.resource.ProductResource;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,18 @@ public class OrderController {
     private final OrderService orderService;
     private final AccountService accountService;
 
-    public OrderController(OrderService orderService, AccountService accountService) {
+    private final StoreService storeService;
+
+//    public OrderController(OrderService orderService, AccountService accountService) {
+//        this.orderService = orderService;
+//        this.accountService = accountService;
+//    }
+
+    public OrderController(OrderService orderService, AccountService accountService, StoreService storeService) {
         this.orderService = orderService;
         this.accountService = accountService;
+        this.storeService = storeService;
     }
-
-
-
 
     //post order with account
     //createorder?accountId=1
@@ -83,11 +89,10 @@ public class OrderController {
 
 
     //get orders by account
-    //get products by store
     ////ordersbyaccount/2
 
     @GetMapping("/ordersbyaccount/{accountId}")
-    public ResponseEntity<List<OrderResource>> getOrdersByStore(@PathVariable Long accountId){
+    public ResponseEntity<List<OrderResource>> getOrdersByAccount(@PathVariable Long accountId){
         //Optional<Store> store = Optional.ofNullable(storeService.get(storeId));
         Optional<Account> account = accountService.getAccount(accountId);
         if (account.isPresent()){
@@ -98,6 +103,23 @@ public class OrderController {
             return new ResponseEntity<>(orderResources, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //get orders by store
+    // ordersbystore/1
+
+    @GetMapping("/ordersbystore/{storeId}")
+    public ResponseEntity<List<OrderResource>> getOrdersByStore(@PathVariable Long storeId){
+        Optional<Store> store = storeService.getStore(storeId);
+        if (store.isPresent()){
+            List<Order> orders = orderService.getOrdersByStore(store.get());
+            List<OrderResource> orderResources = orders.stream()
+                    .map(OrderMapper.INSTANCE::toResource)
+                    .toList();
+            return new ResponseEntity<>(orderResources, HttpStatus.OK);
+        }else {
+            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     public List<Order> findByAccount(Account account);
+
+    public List<Order> findByStore(Store store);
 }

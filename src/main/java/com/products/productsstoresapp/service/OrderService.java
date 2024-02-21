@@ -6,6 +6,7 @@ import com.products.productsstoresapp.repository.OrderItemRepository;
 import com.products.productsstoresapp.repository.OrderRepository;
 import com.products.productsstoresapp.repository.ProductRepository;
 import com.products.productsstoresapp.transfer.resource.OrderItemResource;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,20 +25,6 @@ public class OrderService {
     private final ProductRepository productRepository;
 
 
-//    public OrderService(OrderRepository orderRepository) {
-//        this.orderRepository = orderRepository;
-//    }
-
-//    public OrderService(OrderRepository orderRepository, AccountRepository accountRepository) {
-//        this.orderRepository = orderRepository;
-//        this.accountRepository = accountRepository;
-//    }
-//
-//    public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository) {
-//        this.orderRepository = orderRepository;
-//        this.accountRepository = accountRepository;
-//        this.orderItemRepository = orderItemRepository;
-//    }
 
     public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
@@ -117,36 +104,6 @@ public class OrderService {
 
 
 
-//    BigDecimal total = order.getOrderItems().stream()
-//            .map(OrderItem::getPrice)
-//            .reduce(BigDecimal.ZERO, BigDecimal::add);
-//            order.setCost(total);
-//    Order updatedOrder = orderRepository.save(order);
-
-//    public Order createItemForOrder( OrderItem orderItem, Long orderId, Long productId){
-//        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-//        Optional<Product> optionalProduct = productRepository.findById(productId);
-//        if (optionalProduct.isPresent() && optionalOrder.isPresent()){
-//            Order order = optionalOrder.get();
-//            Product product = optionalProduct.get();
-//            orderItem.setOrder(order);
-//            orderItem.setProduct(product);
-//            BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
-//            orderItem.setPrice(totalPrice);
-//            BigDecimal total = order.getOrderItems().stream()
-//            .map(OrderItem::getPrice)
-//            .reduce(BigDecimal.ZERO, BigDecimal::add);
-//            order.setCost(total);
-//             orderItemRepository.save(orderItem);
-//            Order updatedOrder = orderRepository.save(order);
-//            return updatedOrder;
-//        } else {
-//            throw  new IllegalArgumentException("order with id " + orderId + " or Product with id " + productId+ " not found");
-//        }
-//
-//    }
-
-
     public List<Order> getAllOrders(){
         List<Order> orders = new ArrayList<>();
         orderRepository.findAll()
@@ -162,7 +119,12 @@ public class OrderService {
     }
 
 
-    //count orders
+    //count orders for each store
+
+    public List<Order> getOrdersByStore(Store store){return orderRepository.findByStore(store);}
+
+
+
 
 
 
