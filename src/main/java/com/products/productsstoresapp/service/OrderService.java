@@ -1,10 +1,7 @@
 package com.products.productsstoresapp.service;
 
 import com.products.productsstoresapp.model.*;
-import com.products.productsstoresapp.repository.AccountRepository;
-import com.products.productsstoresapp.repository.OrderItemRepository;
-import com.products.productsstoresapp.repository.OrderRepository;
-import com.products.productsstoresapp.repository.ProductRepository;
+import com.products.productsstoresapp.repository.*;
 import com.products.productsstoresapp.transfer.resource.OrderItemResource;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
@@ -23,13 +20,23 @@ public class OrderService {
 
     private final ProductRepository productRepository;
 
+    private final StoreRepository storeRepository;
 
 
-    public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository) {
+
+//    public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository) {
+//        this.orderRepository = orderRepository;
+//        this.accountRepository = accountRepository;
+//        this.orderItemRepository = orderItemRepository;
+//        this.productRepository = productRepository;
+//    }
+
+    public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository, StoreRepository storeRepository) {
         this.orderRepository = orderRepository;
         this.accountRepository = accountRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
+        this.storeRepository = storeRepository;
     }
 
 
@@ -64,30 +71,56 @@ public class OrderService {
         }
     }
 
-//    public Order updateOrder(Long orderId, Long orderItemId, Order updatedOrder){
-//        Optional<Order> existingOrderOptional = orderRepository.findById(orderId);
-//        Optional<OrderItem> orderItemOptional = orderItemRepository.findById(orderItemId);
-//        List<OrderItem> orderItems = orderItemRepository.findAll();
-//        if (existingOrderOptional.isPresent() && orderItemOptional.isPresent()){
-//            Order existingOrder = existingOrderOptional.get();
-//            OrderItem orderItem = orderItemOptional.get();
-//
-//
-//            //existingOrder.setCost(orderItem.getPrice());
-//        }
-//
-//
-//    }
 
 
+///this works, temporarily commented out
     // add order item in an existing order with an existing product
 
-    public OrderItem createItemForOrder( OrderItem orderItem, Long orderId, Long productId){
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (optionalProduct.isPresent() && optionalOrder.isPresent()){
-            Order order = optionalOrder.get();
-            Product product = optionalProduct.get();
+//    public OrderItem createItemForOrder( OrderItem orderItem, Long orderId, Long productId){
+//        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+//        Optional<Product> optionalProduct = productRepository.findById(productId);
+//        if (optionalProduct.isPresent() && optionalOrder.isPresent()){
+//            Order order = optionalOrder.get();
+//            Product product = optionalProduct.get();
+//            orderItem.setOrder(order);
+//            orderItem.setProduct(product);
+//            //transfer store value
+//            order.setStore(product.getStore());
+//            BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+//            orderItem.setPrice(totalPrice);
+//            return orderItemRepository.save(orderItem);
+//        } else {
+//            throw  new IllegalArgumentException("order with id " + orderId + " or Product with id " + productId+ " not found");
+//        }
+//
+//    }
+//
+    //create order item only from same store
+public OrderItem createItemForOrder( OrderItem orderItem, Long orderId, Long productId, Long storeId){
+    Optional<Order> optionalOrder = orderRepository.findById(orderId);
+    Optional<Product> optionalProduct = productRepository.findById(productId);
+    Optional<Store> optionalStore = storeRepository.findById(storeId);
+
+    if (optionalProduct.isPresent() && optionalOrder.isPresent() && optionalStore.isPresent()) {
+
+        Order order = optionalOrder.get();
+        Product product = optionalProduct.get();
+        //if order contains an item, check the store id
+        if (orderContainsItems(order)){
+            if(product.getStore() == orderItem.getOrder().getStore()){ //
+                //Store store = optionalStore.get();
+
+                orderItem.setOrder(order);
+                orderItem.setProduct(product);
+                //transfer store value
+                order.setStore(product.getStore());
+                BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+                orderItem.setPrice(totalPrice);
+                return orderItemRepository.save(orderItem);
+            } else {
+                throw new IllegalArgumentException("you added a product from another store");
+            }
+        } else {
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             //transfer store value
@@ -95,12 +128,79 @@ public class OrderService {
             BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
             orderItem.setPrice(totalPrice);
             return orderItemRepository.save(orderItem);
+        }
+        }
+     else{
+            throw new IllegalArgumentException("order with id " + orderId + " or Product with id " + productId + " not found");
+        }
+    }
+
+
+
+    //check if order contains orderitems already
+    //returns true if items exist, false if the list is empty
+    public boolean orderContainsItems(Order order){
+        List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+        return !orderItems.isEmpty();
+
+    }
+
+    //check if store id given by the endpoint is identical to store id saved in the existing order item
+    //true if id identical
+    //false if id not identcal
+//    public boolean storeIdIdentical(Long existingStoreId, Long postStoreId){
+//        Optional<Store> store = storeRepository.findById(existingStoreId);
+//        return existingStoreId.equals(postStoreId);
+//
+//    }
+    public OrderItem createOrderItemWithCondition (Long productId, Long orderId, OrderItem orderItem) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        //Optional<OrderItem> optionalOrderItem = orderItemRepository.findById(orderItemId);
+        //Optional<Store> optionalStore = storeRepository.findById(storeId);
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        //OrderItem orderItem = optionalOrderItem.get();
+        Product product = optionalProduct.get();
+        Order order = optionalOrder.get();
+        product.getStore().getId();
+
+        //orderItem.getProduct().getStore();
+        // if already an order
+        if (orderContainsItems(order)) {
+            order.getStore().getId();
+            if (Objects.equals(product.getStore().getId(), order.getStore().getId())) {
+                orderItem.setOrder(order);
+                orderItem.setProduct(product);
+                //transfer store value
+                order.setStore(product.getStore());
+                BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+                orderItem.setPrice(totalPrice);
+                return orderItemRepository.save(orderItem);
+            } else {
+                List<OrderItem> allItemsOfOrder = orderItemRepository.findByOrder(order);
+                orderItemRepository.deleteAll(allItemsOfOrder);
+                order.setStore(null);
+                orderRepository.save(order);
+                throw  new IllegalArgumentException("you added a product from another store, all order items will be cleared");
+            }
+
         } else {
-            throw  new IllegalArgumentException("order with id " + orderId + " or Product with id " + productId+ " not found");
+            orderItem.setOrder(order);
+            orderItem.setProduct(product);
+            //transfer store value
+            order.setStore(product.getStore());
+            BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+            orderItem.setPrice(totalPrice);
+            return orderItemRepository.save(orderItem);
         }
 
     }
 
+    //delete all order items from order method
+    //orderItemRepository.findByOrder(order)
+//    public void deleteAllOrderItems( Order order){
+//        List<OrderItem> allItemsOfOrder = orderItemRepository.findByOrder(order);
+//        orderItemRepository.deleteAll(allItemsOfOrder);
+//    }
 
 
     public List<Order> getAllOrders(){
@@ -143,6 +243,8 @@ public class OrderService {
         return sortedStores;
 
     }
+
+    //sort number of orders by store showing 1 store category each time
 
 
 

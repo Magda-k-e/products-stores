@@ -12,6 +12,7 @@ import com.products.productsstoresapp.transfer.resource.OrderResource;
 import com.products.productsstoresapp.transfer.resource.ProductResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,16 +50,42 @@ public class OrderController {
 
 
 
+
+
+    // this works but commented out temporarily
     //create order item for an order with a product
     //createorderitem?orderId=1&productId=1
-    @PostMapping("createorderitem")
+//    @PostMapping("createorderitem")
+//    public ResponseEntity<OrderItem> createOrderItemForOrder(@RequestBody OrderItem orderItem, @RequestParam Long orderId,
+//                                                                   @RequestParam Long productId){
+//        //OrderItem createdOrderItem = OrderItemMapper.INSTANCE.toDomain(orderItemResource);
+//        OrderItem createdOrderItem = orderService.createItemForOrder(orderItem, orderId, productId);
+//        return new ResponseEntity<>(createdOrderItem,HttpStatus.CREATED);
+//    }
+
+    //add item taking into account store
+
+    @PostMapping("createorderitemstore")
     public ResponseEntity<OrderItem> createOrderItemForOrder(@RequestBody OrderItem orderItem, @RequestParam Long orderId,
-                                                                   @RequestParam Long productId){
+                                                                   @RequestParam Long productId, @RequestParam Long storeId){
         //OrderItem createdOrderItem = OrderItemMapper.INSTANCE.toDomain(orderItemResource);
-        OrderItem createdOrderItem = orderService.createItemForOrder(orderItem, orderId, productId);
+        OrderItem createdOrderItem = orderService.createItemForOrder(orderItem, orderId, productId, storeId);
         return new ResponseEntity<>(createdOrderItem,HttpStatus.CREATED);
     }
 
+    // create order item with store condition
+    //createwithcondition?productId=1&orderId=2
+    @PostMapping("createwithcondition")
+    public ResponseEntity<OrderItem> createOrderItemWithCondition(@RequestParam Long productId,@RequestParam Long orderId,
+                                                                  @RequestBody OrderItem orderItem
+                                                                  ){
+        try {
+            OrderItem createdOrderItem = orderService.createOrderItemWithCondition(productId, orderId, orderItem);
+            return new ResponseEntity<>(createdOrderItem, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
     // view updated order, total cost is shown here
