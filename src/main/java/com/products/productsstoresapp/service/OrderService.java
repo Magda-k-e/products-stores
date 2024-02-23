@@ -180,7 +180,14 @@ public OrderItem createItemForOrder( OrderItem orderItem, Long orderId, Long pro
                 orderItemRepository.deleteAll(allItemsOfOrder);
                 order.setStore(null);
                 orderRepository.save(order);
-                throw  new IllegalArgumentException("you added a product from another store, all order items will be cleared");
+                orderItem.setOrder(order);
+                orderItem.setProduct(product);
+                //transfer store value
+                order.setStore(product.getStore());
+                BigDecimal totalPrice = product.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+                orderItem.setPrice(totalPrice);
+                return orderItemRepository.save(orderItem);
+                //throw  new IllegalArgumentException("you added a product from another store, all order items will be cleared");
             }
 
         } else {
