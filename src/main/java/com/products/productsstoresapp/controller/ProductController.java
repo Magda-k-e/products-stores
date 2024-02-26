@@ -24,10 +24,6 @@ public class ProductController {
 
     private final StoreService storeService;
 
-//    public ProductController(ProductService productService, ProductCategoryService productCategoryService) {
-//        this.productService = productService;
-//        this.productCategoryService = productCategoryService;
-//    }
 
 
     public ProductController(ProductService productService, ProductCategoryService productCategoryService, StoreService storeService) {
@@ -84,10 +80,7 @@ public class ProductController {
         }
     }
 
-//    @RequestMapping(method = RequestMethod.DELETE, value = "/products/{id}")
-//    public void deleteProduct(@PathVariable Long id){
-//        productService.deleteProduct(id);
-//    }
+
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/products/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id){

@@ -18,10 +18,6 @@ public class ProductService {
     private final ProductCategoryRepository productCategoryRepository;
     private final StoreRepository storeRepository;
 
-//    public ProductService(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository) {
-//        this.productRepository = productRepository;
-//        this.productCategoryRepository = productCategoryRepository;
-//    }
 
 
     public ProductService(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository, StoreRepository storeRepository) {

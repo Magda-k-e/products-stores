@@ -24,12 +24,6 @@ public class OrderService {
 
 
 
-//    public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository) {
-//        this.orderRepository = orderRepository;
-//        this.accountRepository = accountRepository;
-//        this.orderItemRepository = orderItemRepository;
-//        this.productRepository = productRepository;
-//    }
 
     public OrderService(OrderRepository orderRepository, AccountRepository accountRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository, StoreRepository storeRepository) {
         this.orderRepository = orderRepository;
