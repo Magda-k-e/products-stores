@@ -13,5 +13,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
      List<Order> findByStore(Store store);
 
+     //List<Order> findByStoreCategory(StoreCategory storeCategory);
+
 
 }

@@ -1,5 +1,6 @@
 package com.products.productsstoresapp.repository;
 
+import com.products.productsstoresapp.model.Product;
 import com.products.productsstoresapp.model.Store;
 import com.products.productsstoresapp.model.StoreCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findByStoreCategory(StoreCategory storeCategory);
 
     Optional<Store> findById(Long id);
+
+    List<Store> findByStoreCategoryDescription(String description);
 }

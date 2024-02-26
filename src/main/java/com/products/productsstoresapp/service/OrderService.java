@@ -251,9 +251,20 @@ public OrderItem createItemForOrder( OrderItem orderItem, Long orderId, Long pro
 
     }
 
+
+
     //sort number of orders by store showing 1 store category each time
+    public Map<Store, Long> getStoresCategorySorted(List<Store> stores, StoreCategory storeCategory){
+        Map<Store,Long> ordersCountByStore = stores.stream()
+                .filter(store -> store.getStoreCategory().getDescription().equals(storeCategory.getDescription()))
+                        .collect(Collectors.toMap(store -> store, store -> (long) orderRepository.findByStore(store).size()));
+        Map<Store, Long> sortedStores = ordersCountByStore.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(e1, e2)-> e2, LinkedHashMap::new));
 
+        return sortedStores;
 
+    }
 
 
 }

@@ -4,10 +4,7 @@ import com.products.productsstoresapp.mapper.OrderItemMapper;
 import com.products.productsstoresapp.mapper.OrderMapper;
 import com.products.productsstoresapp.mapper.ProductMapper;
 import com.products.productsstoresapp.model.*;
-import com.products.productsstoresapp.service.AccountService;
-import com.products.productsstoresapp.service.OrderService;
-import com.products.productsstoresapp.service.ProductService;
-import com.products.productsstoresapp.service.StoreService;
+import com.products.productsstoresapp.service.*;
 import com.products.productsstoresapp.transfer.resource.OrderResource;
 import com.products.productsstoresapp.transfer.resource.ProductResource;
 import org.springframework.http.HttpStatus;
@@ -26,16 +23,26 @@ public class OrderController {
     private final AccountService accountService;
 
     private final StoreService storeService;
+    private  final StoreCategoryService storeCategoryService;
 
 //    public OrderController(OrderService orderService, AccountService accountService) {
 //        this.orderService = orderService;
 //        this.accountService = accountService;
 //    }
 
-    public OrderController(OrderService orderService, AccountService accountService, StoreService storeService) {
+//    public OrderController(OrderService orderService, AccountService accountService, StoreService storeService) {
+//        this.orderService = orderService;
+//        this.accountService = accountService;
+//        this.storeService = storeService;
+//
+//    }
+
+
+    public OrderController(OrderService orderService, AccountService accountService, StoreService storeService, StoreCategoryService storeCategoryService) {
         this.orderService = orderService;
         this.accountService = accountService;
         this.storeService = storeService;
+        this.storeCategoryService = storeCategoryService;
     }
 
     //post order with account
@@ -168,6 +175,15 @@ public class OrderController {
     public ResponseEntity<Map<Store,Long>> viewFamousStores(){
         List<Store> allStores =storeService.getAllStores();
         Map<Store,Long> storesSorted = orderService.getStoresSorted(allStores);
+        return new ResponseEntity<>(storesSorted,HttpStatus.OK);
+
+    }
+
+    //get a List of the most famous stores by StoreCategory (according to number of orders)
+    @GetMapping("/viewfamousstores/bystorecategory/{categoryDescription}")
+    public ResponseEntity<Map<Store,Long>> getFamousStoresByCategory(@PathVariable String categoryDescription){
+        List<Store> storesByCategory = storeService.findStoresByCategoryName(categoryDescription);
+        Map<Store,Long> storesSorted = orderService.getStoresSorted(storesByCategory);
         return new ResponseEntity<>(storesSorted,HttpStatus.OK);
 
     }

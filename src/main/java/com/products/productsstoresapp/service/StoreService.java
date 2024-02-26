@@ -60,4 +60,8 @@ public class StoreService {
         return storeRepository.findById(id);
     }
 
+    public List<Store> findStoresByCategoryName(String description){
+        return storeRepository.findByStoreCategoryDescription(description);
+    }
+
 }
