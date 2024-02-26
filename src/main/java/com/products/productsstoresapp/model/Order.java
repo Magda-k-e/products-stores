@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -14,15 +14,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class StoreCategory implements Serializable {
+@Table(name = "ORDERS")
+public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-    private String description;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "storeCategory")
+    @ManyToOne
+    private Account account;
+
+    @OneToMany(mappedBy = "order")
     @JsonIgnore
-    private List<Store> stores;
+    private List<OrderItem> orderItems;
+
+    private BigDecimal cost;
+
+    @ManyToOne
+    private Store store;
+    //many orders for each store
+
 }

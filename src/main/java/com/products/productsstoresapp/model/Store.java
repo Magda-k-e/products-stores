@@ -3,6 +3,7 @@ package com.products.productsstoresapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.aspectj.weaver.ast.Or;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,11 +22,20 @@ public class Store implements Serializable {
     private String name;
     private String address;
 
-    //@ManyToMany
+
+    @ToString.Exclude
     @OneToMany(mappedBy = "store")
     @JsonIgnore
     private List<Product> products;
 
     @ManyToOne
     private StoreCategory storeCategory;
+
+
+    @ToString.Exclude
+    @OneToMany
+    @JsonIgnore
+    private List<Order> orders;
+
+
 }

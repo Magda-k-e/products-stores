@@ -1,5 +1,6 @@
 package com.products.productsstoresapp.service;
 
+import com.products.productsstoresapp.model.ProductCategory;
 import com.products.productsstoresapp.model.StoreCategory;
 import com.products.productsstoresapp.repository.StoreCategoryRepository;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,12 @@ public class StoreCategoryService {
     //get store category by id
     public Optional<StoreCategory> getStoreCategoryById(Long id) {
         return storeCategoryRepository.findById(id);
+    }
+
+
+    public List<StoreCategory> findByDescription(String description){
+        List<StoreCategory> storesByDescription = storeCategoryRepository.findByDescription(description);
+        return storesByDescription;
+
     }
 }
