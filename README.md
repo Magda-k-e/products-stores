@@ -1,7 +1,7 @@
 
 This web application is built with Java 21, Spring Boot, Maven and the H2 database Server.
 
-The application enables the user to manage the following funtionalities:
+The application enables the user to manage the following functionalities:
 
 Product management: 
 * create products with product categories
@@ -12,7 +12,7 @@ Product management:
 Store management: 
 * create stores and store categories
 * view all stores and categories
-* search a store by category or name or id
+* search for a store by category or name or id
 
 Account management: 
 * create accounts with customer information
@@ -25,4 +25,4 @@ Order Processing:
 * view a sorted list of all stores based on the number of orders placed
 * view a sorted list of all stores of a specific category according to the number of orders placed
 
-All endpoints can be tested with the provided Postman Application Collections
+All API endpoints can be tested with the provided Postman Application Collections.
