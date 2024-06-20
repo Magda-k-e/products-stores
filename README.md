@@ -1,5 +1,5 @@
 
-This web Application is built with Java 21, Spring Boot, Maven and the H2 database Server.
+This web application is built with Java 21, Spring Boot, Maven and the H2 database Server.
 
 The application enables the user to manage the following funtionalities:
 
